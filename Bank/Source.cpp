@@ -11,34 +11,41 @@ Date::Date(int day, int month, int year)
 }
 
 
-
-Account::Account(string accountNUmber, Date creationDate, double balance)
+Account::Account(char* accNumber,Date creationDate, double balance)
 {
+	int length = strlen(accNumber);
+	for (int i = 0; i < length; i++)
+		accountNumber[i] = accNumber[i];
+
 	this->balance = balance;
 	this->creationDate = creationDate;
-	setAccountNumber(accountNUmber);
 }
+
 char* Account::getAccountNUmber() { return accountNumber; }
+
 void Account::setDouble(double sample) { this->balance = sample; }
+
 double Account::getBalance() { return balance; }
-void Account::setAccountNumber(string sample)
-{
-	const char* data = sample.data();
-	int length = sample.size();
-	strncpy_s(accountNumber, data, length);
-	accountNumber[length] = '\0';
-}
-
-
 
 Account Card::getAccount() { return this->linkAccount; }
-Card::Card(Account linkAccount, string cvv2, string pass1, string pass2)
+
+Card::Card(string cardNumber,Account linkAccount, string cvv2, string pass1, string pass2)
 {
+	setCardNumber(cardNumber);;
 	this->linkAccount = linkAccount;
 	setCvv2(cvv2);
 	setPass1(pass1);
 	setPass2(pass2);
 }
+
+void Card::setCardNumber(string sample)
+{
+	const char* data = sample.data();
+	int length = sample.size();
+	strncpy_s(cardNumber, data, length);
+	cardNumber[length] = '\0';
+}
+
 void Card::setCvv2(string sample)
 {
 	const char* data = sample.data();
@@ -60,7 +67,10 @@ void Card::setPass2(string sample)
 	strncpy_s(pass2, data, length);
 	pass2[length] = '\0';
 }
-
+char* Card::getCardNumber()
+{
+	return cardNumber;
+}
 Person::Person(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate) {
 	setName(name);
 	setLastName(lastName);
@@ -127,12 +137,13 @@ void Person::setFatherName(string sample)
 
 
 
-Costumer::Costumer(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate, Date registerDate, string emailAddress, int customerId) :Person(name, lastName, nationalCode, workPlaceAddress, phoneNumber, homePhoneNumber, fatherName, birthDate)
+Costumer::Costumer(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate, Date registerDate, string emailAddress,int costumerId) :Person(name, lastName, nationalCode, workPlaceAddress, phoneNumber, homePhoneNumber, fatherName, birthDate)
 {
+	this->customerId = costumerId;
 	this->registerDate = registerDate;
-	this->customerId = customerId;
 	setEmail(emailAddress);
 }
+
 void Costumer::addAccount(Account sample)
 {
 	if (accountCounter < 20)
@@ -140,6 +151,7 @@ void Costumer::addAccount(Account sample)
 	else
 		cout << "your account is full!!\n";
 }
+
 void Costumer::addCard(Card sample)
 {
 	if (cardCounter < 20)
@@ -147,6 +159,7 @@ void Costumer::addCard(Card sample)
 	else
 		cout << "your account is full!!\n";
 }
+
 void Costumer::setEmail(string sample)
 {
 	const char* data = sample.data();
@@ -155,7 +168,28 @@ void Costumer::setEmail(string sample)
 	emailAddress[length] = '\0';
 
 }
+
 int Costumer::getCustomerId() { return this->customerId; }
+
+Account Costumer::getAccount(int i)
+{
+	return accounts[i];
+}
+
+int Costumer::getAccountSize()
+{
+	return accountCounter;
+}
+
+Card Costumer::getCard(int i)
+{
+	return cards[i];
+}
+
+int Costumer::getCardSize()
+{
+	return cardCounter;
+}
 //////////////////////////////////////////////////////////////////////////////////////////////
 Cheque::Cheque(Person payor, Person getter, int id, double amount)
 {
@@ -189,6 +223,7 @@ void Bank::addClerk(Clerk sample)
 	else
 		cout << "Clerk is full!!!\n";
 }
+
 void Bank::addCostumer(Costumer sample)
 {
 	if (costomersCounter < 100)
@@ -196,4 +231,146 @@ void Bank::addCostumer(Costumer sample)
 	else
 		cout << "costumer is full\n";
 }
-Bank::Bank() { balance = 100000000; }
+
+Bank::Bank() 
+{	balance = 100000000;	
+	clerkCounter=0;
+	costomersCounter=0;
+}
+
+bool isAccountNumberExist(Bank bank, char* code)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+		for (int j = 0; j < bank.costumers[i].getAccountSize(); j++)
+			if (bank.costumers[i].getAccount(j).getAccountNUmber() == code)
+				return true;
+
+	return false;
+}
+
+bool isCostumerIdExist(Bank bank, int code)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+		if (code == bank.costumers[i].getCustomerId())
+			return true;
+
+	return false;
+}
+
+bool isCardNumberExist(Bank bank, char* code)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+		for (int j = 0; j < bank.costumers[i].getCardSize(); j++)
+			if (bank.costumers[i].getCard(j).getCardNumber() == code)
+				return true;
+
+	return false;
+}
+
+void editCostumer(Bank)
+{
+
+}
+
+void getIbanCode(Bank)
+{
+
+}
+
+void editAccount(Bank)
+{
+
+}
+
+void changeClerksDuty(Bank)
+{
+
+}
+
+void editClerk(Bank)
+{
+
+}
+
+void search(Bank)
+{
+
+}
+
+void searchByName(Bank)
+{
+
+}
+
+void searchByAccount(Bank)
+{
+
+}
+
+void searchByCostumerId(Bank)
+{
+
+}
+
+void searchByCostumerAccounts(Bank)
+{
+
+}
+
+void findAccountsCards(Bank)
+{
+
+}
+
+void findyCostumerCards(Bank)
+{
+
+}
+
+void showCostumersInfo(Bank)
+{
+
+}
+
+void findCostumerById(Bank)
+{
+
+}
+
+void findCostumerByBalance(Bank)
+{
+
+}
+
+void findCostumerBeforeDate(Bank)
+{
+	
+}
+
+void findCostumerBeforeRegDate(Bank)
+{
+
+}
+
+void requestLoan(Bank)
+{
+
+}
+
+int isCostumerExist(Bank bank, char* code)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+		if (bank.costumers[i].getNationalCode() == code)
+			return i;
+	return -1;
+}
+
+int isClerkExist(Bank bank, char* code)
+{
+	for (int i = 0; i < bank.clerkCounter; i++)
+		if (bank.clerks[i].getNationalCode() == code)
+			return i;
+	return -1;
+}
+
+
