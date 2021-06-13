@@ -31,45 +31,41 @@ Account Card::getAccount() { return this->linkAccount; }
 
 Card::Card(string cardNumber,Account linkAccount, string cvv2, string pass1, string pass2)
 {
-	setCardNumber(cardNumber);;
+	setCardNumber(cardNumber);
 	this->linkAccount = linkAccount;
 	setCvv2(cvv2);
 	setPass1(pass1);
 	setPass2(pass2);
+
 }
 
 void Card::setCardNumber(string sample)
 {
-	const char* data = sample.data();
-	int length = sample.size();
-	strncpy_s(cardNumber, data, length);
-	cardNumber[length] = '\0';
+	for (int i = 0; i < 16; i++)
+		cardNumber[i] = sample[i];
 }
 
 void Card::setCvv2(string sample)
 {
-	const char* data = sample.data();
-	int length = sample.size();
-	strncpy_s(cvv2, data, length);
-	cvv2[length] = '\0';
+	for (int i = 0; i < 4; i++)
+		cvv2[i] = sample[i];
 }
 void Card::setPass1(string sample)
 {
-	const char* data = sample.data();
-	int length = sample.size();
-	strncpy_s(pass1, data, length);
-	pass1[length] = '\0';
+	for (int i = 0; i < 4; i++)
+		pass1[i] = sample[i];
 }
 void Card::setPass2(string sample)
 {
-	const char* data = sample.data();
-	int length = sample.size();
-	strncpy_s(pass2, data, length);
-	pass2[length] = '\0';
+	for (int i = 0; i < 8; i++)
+		pass2[i] = sample[i];
 }
 char* Card::getCardNumber()
 {
-	return cardNumber;
+	char* sample = new char[16]{'\0'};
+	for (int i = 0; i < 16; i++)
+		sample[i] = cardNumber[i];
+	return sample;
 }
 Person::Person(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate) {
 	setName(name);

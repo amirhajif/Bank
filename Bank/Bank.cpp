@@ -94,6 +94,7 @@ void addCostumer(Bank& bank)
 			if (!isCostumerIdExist(bank, costumerId))
 				break;
 		}
+
 		Costumer cs(name, lastName, nationalCode, workPlaceAddress, phoneNumber, homePhoneNumber, fatherName, birthDate, regDate, emailAddress, costumerId);
 
 		char* accountNumber;
@@ -120,23 +121,24 @@ void addCostumer(Bank& bank)
 			if (!isAccountNumberExist(bank, cardNumber))
 				break;
 		}
-
 		cin.clear();
 		cin.ignore();
 
+
 		cout << "enter card cvv2:\t";
-		string cvv2 = "asdas";
-		//getline(cin, cvv2);
-
+		string cvv2 ;
+		getline(cin, cvv2);
+		
 		cout << "enter card pass 1:\t";
-		string pass1 = "asdas";
-		//getline(cin, pass1);
-
+		string pass1 ;
+		getline(cin, pass1);
+		
 		cout << "enter card pass 2:\t";
-		string pass2 = "1245";
-		//getline(cin, pass2);
-
+		string pass2 ;
+		getline(cin, pass2);
+		
 		Card card(cardNumber, ac, cvv2, pass1, pass2);
+		
 		cs.addAccount(ac);
 		cs.addCard(card);
 	}
@@ -175,7 +177,7 @@ int createCostumerId()
 char* createCardNumber()
 {
 	srand(time(0));
-	static char cardNumber[16];
+	static char cardNumber[16] = {'\0'};
 	for (int i = 0; i < 16; i++)
 	{
 		switch (rand() % 10)
