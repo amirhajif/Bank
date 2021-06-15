@@ -106,6 +106,7 @@ public:
 	Clerk(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate, int clerkId, Date registerDate, double salary, string duty);
 	void setDuty(string sample);
 	int getClerkId();
+	char* getDuty();
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class Bank {
@@ -143,9 +144,10 @@ public:
 	friend void requestLoan(Bank);
 	friend int isCostumerExist(Bank, char*);
 	friend int isClerkExist(Bank, char*);
-
-
-
+	friend int isClerkIdExist(Bank, int);
+	friend int doesBossExist(Bank, string);
+	friend void addAccountToCostumer(Bank);
+	friend void addCardToCostumerAccount(Bank);
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class Cheque {
@@ -158,3 +160,11 @@ public:
 	Cheque(Person payor, Person getter, int id, double amount);
 	Cheque() {}
 };
+
+void addCostumer(Bank&);
+int createCostumerId();
+char* createAccountNumber();
+char* createCardNumber();
+void addClerk(Bank&);
+int createClerkId();
+
