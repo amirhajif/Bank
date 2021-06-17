@@ -243,33 +243,44 @@ Bank::Bank()
 	costomersCounter=0;
 }
 
-bool isAccountNumberExist(Bank bank, char* code)
+int isAccountNumberExist(Bank bank, char* code)
 {
 	for (int i = 0; i < bank.costomersCounter; i++)
+	{
 		for (int j = 0; j < bank.costumers[i].getAccountSize(); j++)
-			if (bank.costumers[i].getAccount(j).getAccountNUmber() == code)
-				return true;
+		{
+			int counter = 0;
+			for (int k = 0; k < 12; k++)
+			{
+				if (bank.costumers[i].getAccount(j).getAccountNUmber()[k] == code[k])
+					counter++;
+			}
 
-	return false;
+			if (counter == 12)
+				return j;
+		}
+	}
+			
+	return -1;
 }
 
-bool isCostumerIdExist(Bank bank, int code)
+int isCostumerIdExist(Bank bank, int code)
 {
 	for (int i = 0; i < bank.costomersCounter; i++)
 		if (code == bank.costumers[i].getCustomerId())
-			return true;
+			return i;
 
-	return false;
+	return -1;
 }
 
-bool isCardNumberExist(Bank bank, char* code)
+int isCardNumberExist(Bank bank, char* code)
 {
 	for (int i = 0; i < bank.costomersCounter; i++)
 		for (int j = 0; j < bank.costumers[i].getCardSize(); j++)
 			if (bank.costumers[i].getCard(j).getCardNumber() == code)
-				return true;
+				return j;
 
-	return false;
+	return -1;
 }
 
 void editCostumer(Bank)
@@ -437,7 +448,7 @@ void addCostumer(Bank& bank)
 		while (true)
 		{
 			costumerId = createCostumerId();
-			if (!isCostumerIdExist(bank, costumerId))
+			if (isCostumerIdExist(bank, costumerId)==-1)
 				break;
 		}
 
@@ -447,7 +458,7 @@ void addCostumer(Bank& bank)
 		while (true)
 		{
 			accountNumber = createAccountNumber();
-			if (!isAccountNumberExist(bank, accountNumber))
+			if (isAccountNumberExist(bank, accountNumber)==-1)
 				break;
 		}
 		cout << "enter your account creation date(day month year -seperate with space-):\t";
@@ -464,7 +475,7 @@ void addCostumer(Bank& bank)
 		while (true)
 		{
 			cardNumber = createCardNumber();
-			if (!isCardNumberExist(bank, cardNumber))
+			if (isCardNumberExist(bank, cardNumber)==-1)
 				break;
 		}
 		cin.clear();
@@ -488,6 +499,7 @@ void addCostumer(Bank& bank)
 		cs.addAccount(ac);
 		cs.addCard(card);
 
+		bank.addCostumer(cs);
 		//update binary file
 		cout << "costuemr added successfully!\n";
 
@@ -672,7 +684,7 @@ void addClerk(Bank& bank)
 	}
 }
 
-void addAccountToCostumer(Bank bank)
+void addAccountToCostumer(Bank& bank)
 {
 	cout << "enter costumer id:\t";
 	int id;
@@ -691,7 +703,7 @@ void addAccountToCostumer(Bank bank)
 		char* newAccountNumber = createAccountNumber();
 		while (true)
 		{
-			if (isAccountNumberExist(bank, newAccountNumber) == -1)
+			if (isAccountNumberExist(bank, newAccountNumber)==-1)
 				break;
 		}
 
@@ -716,11 +728,14 @@ void addAccountToCostumer(Bank bank)
 	}
 }
 
-void addCardToCostumerAccount(Bank bank)
+void addCardToCostumerAccount(Bank& bank)
 {
 	cout << "enter costumer id:\t";
 	int id;
 	cin >> id;
+
+	cin.clear();
+	cin.ignore();
 
 	int index = isCostumerIdExist(bank, id);
 	if (index == -1)
@@ -732,8 +747,8 @@ void addCardToCostumerAccount(Bank bank)
 	else
 	{
 		cout << "enter account number want to add card:\t";
-		char accountNumber[12];
-		cin.get(accountNumber, 12);
+		char accountNumber[13];
+		cin.get(accountNumber, 13);
 
 		int indexOfAccount = isAccountNumberExist(bank, accountNumber);
 		if (indexOfAccount == -1)
@@ -751,17 +766,21 @@ void addCardToCostumerAccount(Bank bank)
 					break;
 			}
 
+			cin.clear();
+			cin.ignore();
+
 			cout << "enter cvv2:\t";
-			char cvv2[4];
-			cin.get(cvv2, 4);
+			string cvv2;
+			getline(cin, cvv2);
 
 			cout << "enter pass1:\t";
-			char pass1[4];
-			cin.get(pass1, 4);
+			string pass1;
+			getline(cin,pass1);
 
 			cout << "enter pass2:\t";
-			char pass2[8];
-			cin.get(pass2, 8);
+			string pass2;
+			getline(cin, pass2);
+
 
 			cout << "card number:\n";
 			for (int i = 0; i < 16; i++)

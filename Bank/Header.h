@@ -121,9 +121,9 @@ public:
 	void addCostumer(Costumer);
 	void addClerk(Clerk);
 
-	friend bool isAccountNumberExist(Bank, char*);
-	friend bool isCostumerIdExist(Bank, int);
-	friend bool isCardNumberExist(Bank, char*);
+	friend int isAccountNumberExist(Bank, char*);
+	friend int isCostumerIdExist(Bank, int);
+	friend int isCardNumberExist(Bank, char*);
 	friend void editCostumer(Bank);
 	friend void getIbanCode(Bank);
 	friend void editAccount(Bank);
@@ -146,8 +146,8 @@ public:
 	friend int isClerkExist(Bank, char*);
 	friend int isClerkIdExist(Bank, int);
 	friend int doesBossExist(Bank, string);
-	friend void addAccountToCostumer(Bank);
-	friend void addCardToCostumerAccount(Bank);
+	friend void addAccountToCostumer(Bank&);
+	friend void addCardToCostumerAccount(Bank&);
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class Cheque {
