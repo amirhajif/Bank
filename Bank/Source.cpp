@@ -14,11 +14,19 @@ Date::Date(int day, int month, int year)
 }
 
 
-Account::Account(char* accNumber,Date creationDate, double balance)
+Account::Account(char* accNumber,Date creationDate, double balance,char* ibanCode)
 {
+	for (int i = 0; i < 12; i++)
+		accountNumber[i] = '\0';
 	int length = strlen(accNumber);
 	for (int i = 0; i < length; i++)
 		accountNumber[i] = accNumber[i];
+
+	for (int i = 0; i < 16; i++)
+		IBAN[i] = '\0';
+	length = strlen(ibanCode);
+	for (int i = 0; i < length; i++)
+		IBAN[i] = ibanCode[i];
 
 	this->balance = balance;
 	this->creationDate = creationDate;
@@ -31,6 +39,11 @@ void Account::setDouble(double sample) { this->balance = sample; }
 double Account::getBalance() { return balance; }
 
 Account Card::getAccount() { return this->linkAccount; }
+
+char* Account::getIBAN()
+{
+	return IBAN;
+}
 
 Card::Card(string cardNumber,Account linkAccount, string cvv2, string pass1, string pass2)
 {
@@ -264,6 +277,28 @@ int isAccountNumberExist(Bank bank, char* code)
 	return -1;
 }
 
+int isIbanCodeExist(Bank bank, char* code)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		for (int j = 0; j < bank.costumers[i].getAccountSize(); j++)
+		{
+			int counter = 0;
+			for (int k = 0; k < 16; k++)
+			{
+				if (bank.costumers[i].getAccount(j).getIBAN()[k] == code[k])
+					counter++;
+			}
+
+			if (counter == 16)
+				return j;
+		}
+	}
+
+	return -1;
+}
+
+
 int isCostumerIdExist(Bank bank, int code)
 {
 	for (int i = 0; i < bank.costomersCounter; i++)
@@ -277,20 +312,127 @@ int isCardNumberExist(Bank bank, char* code)
 {
 	for (int i = 0; i < bank.costomersCounter; i++)
 		for (int j = 0; j < bank.costumers[i].getCardSize(); j++)
-			if (bank.costumers[i].getCard(j).getCardNumber() == code)
+		{
+			int counter = 0;
+			for (int k = 0; k < 16; k++)
+			{
+				if (bank.costumers[i].getCard(j).getCardNumber()[k] == code[k])
+					counter++;
+			}
+
+			if (counter == 16)
 				return j;
+		}
 
 	return -1;
 }
 
-void editCostumer(Bank)
+void editCostumer(Bank* bank)
 {
+	cout << "enter your costumer id:\t";
 
+	int id;
+	cin >> id;
+
+	int indexOfCostumer = isCostumerIdExist(*bank, id);
+	if (indexOfCostumer == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+	else
+	{
+		cout << "enter what field want to edit:\n";
+		cout << "1.work place address\n2.phone number\n3.home phone number\n";
+		int opt;
+		cin >> opt;
+
+		cin.clear();
+		cin.ignore();
+
+		switch (opt)
+		{
+			case 1:
+			{
+				cout << "enter new workplace address:\n";
+				
+				string address;
+				getline(cin, address);
+				bank->costumers[indexOfCostumer].setWorkPlaceAddress(address);
+				//update binary
+
+				cout << "updated successfully!\n";
+
+			}break;
+
+			case 2:
+			{
+				cout << "enter new phone number:\t";
+				string number;
+				getline(cin, number);
+
+				bank->costumers[indexOfCostumer].setPhoneNumber(number);
+				//update binary
+
+				cout << "updated successfully!\n";
+			}break;
+
+			case 3:
+			{
+				cout << "enter new home phone number:\t";
+				string number;
+				getline(cin, number);
+
+				bank->costumers[indexOfCostumer].setHomePhoneNumber(number);
+				//update binary
+
+				cout << "updated successfully!\n";
+			}break;
+
+			default:
+			{
+				cout << "invalid command!\n";
+				return;
+			}
+		}
+	}
 }
 
-void getIbanCode(Bank)
+void getIbanCode(Bank bank)
 {
+	cout << "enter costumer id:\n";
+	int costumerId;
+	cin >> costumerId;
 
+	int indexOfCostumer = isCostumerIdExist(bank, costumerId);
+
+	if (indexOfCostumer == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+	else
+	{
+		cout << "enter account number:\t";
+
+		cin.clear();
+		cin.ignore();
+		char accountNumber[13];
+		cin.get(accountNumber, 13);
+
+		int indexOfAccount = isAccountNumberExist(bank, accountNumber);
+		if (indexOfAccount == -1)
+		{
+			cout << "not found!\n";
+			return;
+		}
+		else
+		{
+			for (int i = 0; i < 16; i++)
+				cout << bank.costumers[indexOfCostumer].getAccount(indexOfAccount).getIBAN()[i];
+			cout << endl;
+		}
+	}
 }
 
 void editAccount(Bank)
@@ -389,6 +531,33 @@ int isClerkExist(Bank bank, char* code)
 	return -1;
 }
 
+char* createIbanCode()
+{
+	srand(time(0));
+	static char ibanCode[16]{ '\0' };
+	ibanCode[0] = 'I';
+	ibanCode[1] = 'R';
+	for (int i = 2; i < 16; i++)
+	{
+		switch (rand() % 10)
+		{
+		case 1:ibanCode[i] = '1'; break;
+		case 2:ibanCode[i] = '2'; break;
+		case 3:ibanCode[i] = '3'; break;
+		case 4:ibanCode[i] = '4'; break;
+		case 5:ibanCode[i] = '5'; break;
+		case 6:ibanCode[i] = '6'; break;
+		case 7:ibanCode[i] = '7'; break;
+		case 8:ibanCode[i] = '8'; break;
+		case 9:ibanCode[i] = '9'; break;
+		case 0:ibanCode[i] = '0'; break;
+
+		}
+	}
+
+	return ibanCode;
+}
+
 void addCostumer(Bank& bank)
 {
 	cout << "enter costumer infos:\n";
@@ -469,7 +638,15 @@ void addCostumer(Bank& bank)
 		int balance;
 		cin >> balance;
 
-		Account ac(accountNumber, creationDate, balance);
+		char* ibanCode;
+		while (true)
+		{
+			ibanCode = createIbanCode();
+			if (isIbanCodeExist(bank,ibanCode))
+				break;
+		}
+
+		Account* ac=new Account(accountNumber, creationDate, balance,ibanCode);
 
 		char* cardNumber;
 		while (true)
@@ -494,10 +671,9 @@ void addCostumer(Bank& bank)
 		string pass2;
 		getline(cin, pass2);
 
-		Card card(cardNumber, ac, cvv2, pass1, pass2);
-
-		cs.addAccount(ac);
-		cs.addCard(card);
+		Card* card=new Card(cardNumber,*ac, cvv2, pass1, pass2);
+		cs.addAccount(*ac);
+		cs.addCard(*card);
 
 		bank.addCostumer(cs);
 		//update binary file
@@ -542,8 +718,11 @@ char* createAccountNumber()
 	return accountNumber;
 }
 
+
+
 int createCostumerId()
 {
+	srand(time(0));
 	return rand() % (9999 - 1000) + 1000;
 }
 
@@ -720,7 +899,15 @@ void addAccountToCostumer(Bank& bank)
 			cout << newAccountNumber[i];
 		cout << endl;
 
-		bank.costumers[index].addAccount(Account(newAccountNumber, Date(day, month, year), balance));
+		char* ibanCode;
+		while (true)
+		{
+			ibanCode = createIbanCode();
+			if (isIbanCodeExist(bank, ibanCode))
+				break;
+		}
+
+		bank.costumers[index].addAccount(Account(newAccountNumber, Date(day, month, year), balance, ibanCode));
 
 		//update binary
 

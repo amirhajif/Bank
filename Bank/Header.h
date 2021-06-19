@@ -12,18 +12,20 @@ public:
 	void printDate();
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////
-class Account {
+class Account 
+{
 private:
 	char accountNumber[12];
 	Date creationDate;
 	double balance;
+	char IBAN[16];
 public:
 	Account() {}
-	Account(char* accountNumber,Date creationDate, double balance);
+	Account(char* accountNumber,Date creationDate, double balance,char* ibanCode);
 	double getBalance();
 	void setDouble(double sample);
 	char* getAccountNUmber();
-
+	char* getIBAN();
 
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +126,7 @@ public:
 	friend int isAccountNumberExist(Bank, char*);
 	friend int isCostumerIdExist(Bank, int);
 	friend int isCardNumberExist(Bank, char*);
-	friend void editCostumer(Bank);
+	friend void editCostumer(Bank*);
 	friend void getIbanCode(Bank);
 	friend void editAccount(Bank);
 	friend void changeClerksDuty(Bank);
@@ -148,6 +150,8 @@ public:
 	friend int doesBossExist(Bank, string);
 	friend void addAccountToCostumer(Bank&);
 	friend void addCardToCostumerAccount(Bank&);
+	friend int isIbanCodeExist(Bank, char*);
+
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class Cheque {
