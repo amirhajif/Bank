@@ -68,6 +68,8 @@ public:
 	void setPhoneNumber(string sample);
 	void setHomePhoneNumber(string sample);
 	void setFatherName(string sample);
+	string getName();
+	void showInfo();
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 class Costumer :public Person {
@@ -130,7 +132,7 @@ public:
 	friend void getIbanCode(Bank);
 	friend void editAccount(Bank);
 	friend void changeClerksDuty(Bank);
-	friend void editClerk(Bank);
+	friend void editClerk(Bank*);
 	friend void search(Bank);
 	friend void searchByName(Bank);
 	friend void searchByAccount(Bank);
@@ -151,7 +153,8 @@ public:
 	friend void addAccountToCostumer(Bank&);
 	friend void addCardToCostumerAccount(Bank&);
 	friend int isIbanCodeExist(Bank, char*);
-
+	friend int isCostumerNameExist(Bank, string);
+	friend int findCostumerByAccountNumber(Bank, char*);
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class Cheque {

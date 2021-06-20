@@ -145,8 +145,35 @@ void Person::setFatherName(string sample)
 	strncpy_s(fatherName, data, length);
 	fatherName[length] = '\0';
 }
+string Person::getName()
+{
+	string fullname = "";
+	for (int i = 0; i < strlen(name); i++)
+		fullname += name[i];
 
+	fullname += " ";
 
+	for (int i = 0; i < strlen(lastName); i++)
+		fullname += lastName[i];
+
+	return fullname;
+
+}
+
+void Person::showInfo()
+{
+	cout << "\n---------------------------\n";
+	cout << "name:\t" << name << endl;
+	cout << "last name:\t" << lastName << endl;
+	cout << "national code:\t" << nationalCode << endl;
+	cout << "father name:\t" << fatherName << endl;
+	cout << "work place address:\t" << workPlaceAddress << endl;
+	cout << "phone number:\t" << phoneNumber << endl;
+	cout << "home phone number:\t" << homePhoneNumber << endl;
+	cout << "birthdate:\t";
+	birthDate.printDate();
+	cout << "\n---------------------------\n";
+}
 
 
 Costumer::Costumer(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate, Date registerDate, string emailAddress,int costumerId) :Person(name, lastName, nationalCode, workPlaceAddress, phoneNumber, homePhoneNumber, fatherName, birthDate)
@@ -445,9 +472,95 @@ void changeClerksDuty(Bank)
 
 }
 
-void editClerk(Bank)
+void editClerk(Bank* bank)
 {
+	cout << "enter clerk id:\t";
+	int id;
+	cin >> id;
 
+	int index = isClerkIdExist(*bank, id);
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+
+	cout << "enter what field want to edit:\n";
+	cout << "1.work place address\n2.phone number\n3.home phone number\n4.duty\n";
+	int opt;
+	cin >> opt;
+
+	cin.clear();
+	cin.ignore();
+
+	switch (opt)
+	{
+		case 1:
+		{
+			cout << "enter new workplace address:\n";
+
+			string address;
+			getline(cin, address);
+			bank->clerks[index].setWorkPlaceAddress(address);
+			//update binary
+
+			cout << "updated successfully!\n";
+
+		}break;
+
+		case 2:
+		{
+			cout << "enter new phone number:\t";
+			string number;
+			getline(cin, number);
+
+			bank->clerks[index].setPhoneNumber(number);
+			//update binary
+
+			cout << "updated successfully!\n";
+		}break;
+
+		case 3:
+		{
+			cout << "enter new home phone number:\t";
+			string number;
+			getline(cin, number);
+
+			bank->clerks[index].setHomePhoneNumber(number);
+			//update binary
+
+			cout << "updated successfully!\n";
+		}break;
+
+		case 4:
+		{
+			cout << "enter new duty:\n";
+			string duty;
+			getline(cin, duty);
+
+			int indexOfBoss = doesBossExist(*bank, "boss");
+			if (indexOfBoss == -1)
+			{
+				bank->clerks[index].setDuty(duty);
+
+				cout << "edited successfully!\n";
+
+				//update binary
+			}
+			else
+			{
+				cout << "bank already have a boss!\n";
+				return;
+			}
+
+		}break;
+
+		default:
+		{
+			cout << "invalid command!\n";
+			return;
+		}
+	}
 }
 
 void search(Bank)
@@ -455,9 +568,20 @@ void search(Bank)
 
 }
 
-void searchByName(Bank)
+void searchByName(Bank bank)
 {
+	cout << "enter the name:\t";
+	string name;
+	getline(cin, name);
 
+	int index = isCostumerNameExist(bank, name);
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+	
+	bank.costumers[index].showInfo();
 }
 
 void searchByAccount(Bank)
@@ -465,14 +589,37 @@ void searchByAccount(Bank)
 
 }
 
-void searchByCostumerId(Bank)
+void searchByCostumerId(Bank bank)
 {
+	cout << "enter costumer id:\t";
+	int id;
+	cin >> id;
 
+	int index = isCostumerIdExist(bank, id);
+	if (index == -1)
+	{
+		cout << "not exist!\n";
+		return;
+	}
+
+	bank.costumers[index].showInfo();
 }
 
-void searchByCostumerAccounts(Bank)
+void searchByCostumerAccounts(Bank bank)
 {
+	cout << "enter account number:\t";
+	char accNumber[13];
+	cin.get(accNumber, 13);
 
+	int index = findCostumerByAccountNumber(bank, accNumber);
+
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+
+	bank.costumers[index].showInfo();
 }
 
 void findAccountsCards(Bank)
@@ -764,10 +911,10 @@ int isClerkIdExist(Bank bank,int id)
 	return -1;
 }
 
-int doesBossExist(Bank bank, string id)
+int doesBossExist(Bank bank, string duty)
 {
 	for (int i = 0; i < bank.clerkCounter; i++)
-		if (bank.clerks[i].getDuty() == id)
+		if (bank.clerks[i].getDuty() == duty)
 			return i;
 
 	return -1;
@@ -984,4 +1131,34 @@ void addCardToCostumerAccount(Bank& bank)
 		}
 
 	}
+}
+
+int isCostumerNameExist(Bank bank, string name)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+		if (bank.costumers[i].getName() == name)
+			return i;
+	return -1;
+}
+
+int findCostumerByAccountNumber(Bank bank, char* accNumber)
+{
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		for (int j = 0; j < bank.costumers[i].getAccountSize(); j++)
+		{
+			int counter = 0;
+			for (int k = 0; k < 12; k++)
+			{
+				if (bank.costumers[i].getAccount(j).getAccountNUmber()[k] == accNumber[k])
+					counter++;
+			}
+
+			if (counter == 12)
+				return i;
+		}
+	}
+
+	return -1;
+	
 }
