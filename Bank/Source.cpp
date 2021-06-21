@@ -388,6 +388,8 @@ void editCostumer(Bank* bank)
 				getline(cin, address);
 				bank->costumers[indexOfCostumer].setWorkPlaceAddress(address);
 				//update binary
+				ofstream file("MyRecords.dat", ios::binary);
+				file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 				cout << "updated successfully!\n";
 
@@ -401,6 +403,8 @@ void editCostumer(Bank* bank)
 
 				bank->costumers[indexOfCostumer].setPhoneNumber(number);
 				//update binary
+				ofstream file("MyRecords.dat", ios::binary);
+				file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 				cout << "updated successfully!\n";
 			}break;
@@ -413,6 +417,8 @@ void editCostumer(Bank* bank)
 
 				bank->costumers[indexOfCostumer].setHomePhoneNumber(number);
 				//update binary
+				ofstream file("MyRecords.dat", ios::binary);
+				file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 				cout << "updated successfully!\n";
 			}break;
@@ -504,6 +510,8 @@ void editClerk(Bank* bank)
 			getline(cin, address);
 			bank->clerks[index].setWorkPlaceAddress(address);
 			//update binary
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 			cout << "updated successfully!\n";
 
@@ -517,6 +525,8 @@ void editClerk(Bank* bank)
 
 			bank->clerks[index].setPhoneNumber(number);
 			//update binary
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 			cout << "updated successfully!\n";
 		}break;
@@ -529,6 +539,8 @@ void editClerk(Bank* bank)
 
 			bank->clerks[index].setHomePhoneNumber(number);
 			//update binary
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 			cout << "updated successfully!\n";
 		}break;
@@ -547,6 +559,8 @@ void editClerk(Bank* bank)
 				cout << "edited successfully!\n";
 
 				//update binary
+				ofstream file("MyRecords.dat", ios::binary);
+				file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 			}
 			else
 			{

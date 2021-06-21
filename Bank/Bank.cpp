@@ -38,12 +38,12 @@ int main()
 			case 2:addClerk(*bank, binaryFileName); break;//finish
 			case 3:addAccountToCostumer(*bank); break;//finish
 			case 4:addCardToCostumerAccount(*bank); break;//finish
-			case 5:editCostumer(bank); break;
-			case 6:getIbanCode(*bank); break;
-			case 7:editClerk(bank); break;
-			case 8:searchByName(*bank); break;
-			case 9:searchByCostumerId(*bank); break;
-			case 10:searchByCostumerAccounts(*bank); break;
+			case 5:editCostumer(bank); break;//finish
+			case 6:getIbanCode(*bank); break;//dont need file
+			case 7:editClerk(bank); break;//finish
+			case 8:searchByName(*bank); break;//dont need file
+			case 9:searchByCostumerId(*bank); break;//dont need file
+			case 10:searchByCostumerAccounts(*bank); break;//dont need file
 		}
 	}
 }
