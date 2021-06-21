@@ -2,6 +2,7 @@
 #include <string>
 #include <time.h>
 #include <stdlib.h>
+#include <fstream>
 #include "Header.h"
 
 using namespace std;
@@ -705,8 +706,9 @@ char* createIbanCode()
 	return ibanCode;
 }
 
-void addCostumer(Bank& bank)
+void addCostumer(Bank& bank,string binaryFileName)
 {
+	
 	cout << "enter costumer infos:\n";
 
 	cout << "enter national code:\t";
@@ -823,7 +825,11 @@ void addCostumer(Bank& bank)
 		cs.addCard(*card);
 
 		bank.addCostumer(cs);
-		//update binary file
+		//update binary file --->sure???
+		//edame chizaii k nvshti chi pas?
+		ofstream file(binaryFileName, ios::binary);
+		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+		
 		cout << "costuemr added successfully!\n";
 
 		cout << "your infos(write or save it someWhere):\n";
@@ -920,7 +926,7 @@ int doesBossExist(Bank bank, string duty)
 	return -1;
 }
 
-void addClerk(Bank& bank)
+void addClerk(Bank& bank,string binaryFileName)
 {
 	cout << "enter clerk infos:\n";
 
@@ -1004,6 +1010,8 @@ void addClerk(Bank& bank)
 		bank.addClerk(cl);
 
 		//update binary file
+		ofstream file(binaryFileName, ios::binary);
+		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 		cout << "clerk with id " << cl.getClerkId() << " added successfully!\n";
 
@@ -1161,4 +1169,20 @@ int findCostumerByAccountNumber(Bank bank, char* accNumber)
 
 	return -1;
 	
+}
+void makeOrExistFile(string FileName,Bank &bank) {
+	ifstream check(FileName,ios::binary);
+	if (check)
+	{
+		check.read(reinterpret_cast<char*>(&bank), sizeof(Bank));
+		check.close();
+		return;
+	}
+	else
+	{
+		check.close();
+		ofstream file(FileName, ios::binary);
+		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+		return;
+	}
 }

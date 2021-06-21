@@ -4,13 +4,17 @@
 #include <time.h>
 #include <assert.h>
 #include "Header.h"
+#include "Source.cpp"
+
+#define binaryFileName "MyRecords.dat"
 using namespace std;
  
 
 int main()
 {
 	Bank* bank = new Bank();
-
+	makeOrExistFile(binaryFileName,bank);
+ 
 	while (true)
 	{
 		cout << "1.add costumer\n2.add clerk\n";
@@ -30,8 +34,8 @@ int main()
 
 		switch (opt)
 		{
-			case 1:addCostumer(*bank); break;
-			case 2:addClerk(*bank); break;
+			case 1:addCostumer(*bank, binaryFileName); break;
+			case 2:addClerk(*bank, binaryFileName); break;
 			case 3:addAccountToCostumer(*bank); break;
 			case 4:addCardToCostumerAccount(*bank); break;
 			case 5:editCostumer(bank); break;
