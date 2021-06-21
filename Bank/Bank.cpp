@@ -34,8 +34,8 @@ int main()
 
 		switch (opt)
 		{
-			case 1:addCostumer(*bank, binaryFileName); break;//finish
-			case 2:addClerk(*bank, binaryFileName); break;//finish
+			case 1:addCostumer(*bank); break;//finish
+			case 2:addClerk(*bank); break;//finish
 			case 3:addAccountToCostumer(*bank); break;//finish
 			case 4:addCardToCostumerAccount(*bank); break;//finish
 			case 5:editCostumer(bank); break;//finish

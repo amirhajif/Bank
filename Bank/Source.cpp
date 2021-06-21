@@ -720,7 +720,7 @@ char* createIbanCode()
 	return ibanCode;
 }
 
-void addCostumer(Bank& bank,string binaryFileName)
+void addCostumer(Bank& bank)
 {
 	
 	cout << "enter costumer infos:\n";
@@ -841,7 +841,7 @@ void addCostumer(Bank& bank,string binaryFileName)
 		bank.addCostumer(cs);
 		//update binary file --->sure???
 		//edame chizaii k nvshti chi pas?
-		ofstream file(binaryFileName, ios::binary);
+		ofstream file("MyRecords.dat", ios::binary);
 		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 		
 		cout << "costuemr added successfully!\n";
@@ -940,7 +940,7 @@ int doesBossExist(Bank bank, string duty)
 	return -1;
 }
 
-void addClerk(Bank& bank,string binaryFileName)
+void addClerk(Bank& bank)
 {
 	cout << "enter clerk infos:\n";
 
@@ -1024,7 +1024,7 @@ void addClerk(Bank& bank,string binaryFileName)
 		bank.addClerk(cl);
 
 		//update binary file
-		ofstream file(binaryFileName, ios::binary);
+		ofstream file("MyRecords.dat", ios::binary);
 		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 		cout << "clerk with id " << cl.getClerkId() << " added successfully!\n";
