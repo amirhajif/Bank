@@ -34,10 +34,10 @@ int main()
 
 		switch (opt)
 		{
-			case 1:addCostumer(*bank, binaryFileName); break;
-			case 2:addClerk(*bank, binaryFileName); break;
-			case 3:addAccountToCostumer(*bank); break;
-			case 4:addCardToCostumerAccount(*bank); break;
+			case 1:addCostumer(*bank, binaryFileName); break;//finish
+			case 2:addClerk(*bank, binaryFileName); break;//finish
+			case 3:addAccountToCostumer(*bank); break;//finish
+			case 4:addCardToCostumerAccount(*bank); break;//finish
 			case 5:editCostumer(bank); break;
 			case 6:getIbanCode(*bank); break;
 			case 7:editClerk(bank); break;

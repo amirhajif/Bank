@@ -1065,6 +1065,8 @@ void addAccountToCostumer(Bank& bank)
 		bank.costumers[index].addAccount(Account(newAccountNumber, Date(day, month, year), balance, ibanCode));
 
 		//update binary
+		ofstream file("MyRecords.dat", ios::binary);
+		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 
 		cout << "your account updated successfully!\n";
 	}
@@ -1136,6 +1138,8 @@ void addCardToCostumerAccount(Bank& bank)
 			cout << "card added successfully!\n";
 
 			//update binary
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 		}
 
 	}
