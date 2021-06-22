@@ -1188,8 +1188,8 @@ int findCostumerByAccountNumber(Bank bank, char* accNumber)
 	return -1;
 	
 }
-void makeOrExistFile(string FileName,Bank &bank) {
-	ifstream check(FileName,ios::binary);
+void makeOrExistFile(Bank &bank) {
+	ifstream check("MyRecords.dat",ios::binary);
 	if (check)
 	{
 		check.read(reinterpret_cast<char*>(&bank), sizeof(Bank));
@@ -1199,7 +1199,7 @@ void makeOrExistFile(string FileName,Bank &bank) {
 	else
 	{
 		check.close();
-		ofstream file(FileName, ios::binary);
+		ofstream file("MyRecords.dat", ios::binary);
 		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 		return;
 	}

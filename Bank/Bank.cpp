@@ -13,7 +13,7 @@ using namespace std;
 int main()
 {
 	Bank* bank = new Bank();
-	makeOrExistFile(binaryFileName,bank);
+	makeOrExistFile(*bank);
  
 	while (true)
 	{
