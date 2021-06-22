@@ -230,11 +230,6 @@ int Costumer::getCardSize()
 {
 	return cardCounter;
 }
-
-void Costumer::info()
-{
-	cout << name << lastName << "  " << nationalCode << "  " << workPlaceAddress<<<<"  " << phoneNumber << "  " << homePhoneNumber << "  " << fatherName <<"  "<<birthDate.printDate() <<endl;
-}
 //////////////////////////////////////////////////////////////////////////////////////////////
 Cheque::Cheque(Person payor, Person getter, int id, double amount)
 {
@@ -282,6 +277,12 @@ void Bank::addCostumer(Costumer sample)
 	else
 		cout << "costumer is full\n";
 }
+Costumer Bank::getCostumers(int i)
+{
+	return costumers[i];
+}
+
+int Bank::getCostumerCounter() { return costomersCounter; }
 
 Bank::Bank() 
 {	balance = 100000000;	
@@ -642,13 +643,42 @@ void searchByCostumerAccounts(Bank bank)
 	bank.costumers[index].showInfo();
 }
 
-void findAccountsCards(Bank)
+void findAccountsCards(Bank bank)
 {
-
+	cout << "plz entere Account number:\t";
+	int Number;
+	cin >> Number;
+	string AcNumber = to_string(Number);
+	for (int i = 0; i < bank.getCostumerCounter(); i++)
+	{
+		for (int j = 0; j < bank.getCostumers(i).getAccountSize(); j++)
+		{
+			if (bank.getCostumers(i).getAccount(j).getAccountNUmber() == AcNumber)
+			{
+				for (int k = 0; k < bank.getCostumers(i).getCardSize(); k++)
+					cout << bank.getCostumers(i).getCard(k).getCardNumber()<<endl;
+			}
+		}
+	}
 }
 
-void findCostumerCards(Bank)
+void findyCostumerCards(Bank bank)
 {
+	cout << "plz entere costumer id:\t";
+	int id;
+	cin >> id;
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		if (bank.costumers[i].getCustomerId() == id)
+		{
+			cout << "this costumer cards:\n";
+			for (int j = 0; j < bank.costumers[i].getCardSize(); j++)
+				cout << bank.costumers[i].getCard(j).getCardNumber()<<endl;
+			return;
+		}
+
+	}
+	cout << "not found costumer by this id\n";
 
 }
 
@@ -656,7 +686,7 @@ void showCostumersInfo(Bank bank)
 {
 	for (int i = 0; i < bank.costomersCounter; i++)
 	{
-		bank.costumers[i].info();
+		bank.costumers[i].showInfo();
 	}
 }
 
@@ -669,7 +699,7 @@ void findCostumerById(Bank bank)
 	{
 		if (bank.costumers[i].getCustomerId() == id)
 		{
-			bank.costumers[i].info();
+			bank.costumers[i].showInfo();
 			return;
 		}
 		
