@@ -230,6 +230,11 @@ int Costumer::getCardSize()
 {
 	return cardCounter;
 }
+
+void Costumer::info()
+{
+	cout << name << lastName << "  " << nationalCode << "  " << workPlaceAddress<<<<"  " << phoneNumber << "  " << homePhoneNumber << "  " << fatherName <<"  "<<birthDate.printDate() <<endl;
+}
 //////////////////////////////////////////////////////////////////////////////////////////////
 Cheque::Cheque(Person payor, Person getter, int id, double amount)
 {
@@ -642,19 +647,34 @@ void findAccountsCards(Bank)
 
 }
 
-void findyCostumerCards(Bank)
+void findCostumerCards(Bank)
 {
 
 }
 
-void showCostumersInfo(Bank)
+void showCostumersInfo(Bank bank)
 {
-
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		bank.costumers[i].info();
+	}
 }
 
-void findCostumerById(Bank)
+void findCostumerById(Bank bank)
 {
-
+	cout << "plz entere costumer id:\t";
+	int id;
+	cin >> id;
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		if (bank.costumers[i].getCustomerId() == id)
+		{
+			bank.costumers[i].info();
+			return;
+		}
+		
+	}
+	cout << "not found costumer by this id\n";
 }
 
 void findCostumerByBalance(Bank)
