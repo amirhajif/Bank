@@ -27,6 +27,8 @@ public:
 	Account(char* accountNumber,Date creationDate, double balance,char* ibanCode);
 	double getBalance();
 	void setDouble(double sample);
+	void setAccountNumber(string sample);
+	void setIBN(string sample);
 	char* getAccountNUmber();
 	char* getIBAN();
 
@@ -146,13 +148,11 @@ public:
 	//shomare shaba mide
 	friend void getIbanCode(Bank);
 	
-	friend void editAccount(Bank);
+	friend void editAccount(Bank*);
 	
-	friend void changeClerksDuty(Bank);
+	friend void changeClerksDuty(Bank*);
 	
 	friend void editClerk(Bank*);
-	
-	friend void search(Bank);
 	
 	friend void searchByName(Bank);
 	
@@ -164,7 +164,7 @@ public:
 	
 	friend void findAccountsCards(Bank);
 	
-	friend void findyCostumerCards(Bank);
+	friend void findCostumerCards(Bank);
 	
 	friend void showCostumersInfo(Bank);
 	

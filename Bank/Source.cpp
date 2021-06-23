@@ -38,6 +38,16 @@ Account::Account(char* accNumber,Date creationDate, double balance,char* ibanCod
 char* Account::getAccountNUmber() { return accountNumber; }
 
 void Account::setDouble(double sample) { this->balance = sample; }
+void Account::setIBN(string sample)
+{
+	for (int i = 0; i < 16; i++)
+		this->IBAN[i] = sample[i];
+}
+void Account::setAccountNumber(string sample) 
+{
+	for (int i = 0; i < 12; i++)
+		this->accountNumber[i] = sample[i];
+}
 
 double Account::getBalance() { return balance; }
 
@@ -480,32 +490,114 @@ void getIbanCode(Bank bank)
 	}
 }
 
-void editAccount(Bank)
+void editAccount(Bank* bank)
 {
+	cout << "plz entere Account Number:\t";
+	char accountNumber[13];
+	cin.get(accountNumber, 13);
+	int findedCostumerNUmber,findedAccountNumber;
+	bool isExist = false;
+	for (int i = 0; i < bank->costomersCounter; i++)
+	{
+		for (int j = 0; j < bank->costumers[i].getAccountSize(); j++)
+		{
+			int counter = 0;
+			for (int k = 0; k < 12; k++)
+			{
+				if (bank->costumers[i].getAccount(j).getAccountNUmber()[k] ==accountNumber[k])
+					counter++;
+			}
 
+			if (counter == 12)
+			{
+				isExist = true;
+				findedCostumerNUmber = i;
+				findedAccountNumber = j;
+				break;
+			}
+				
+		}
+	}
+	if (isExist) {
+		cout << "enter what field want to edit:\n";
+		cout << "1-account number\n2-balance\n3-IBAN\n";
+		int opt;
+		cin >> opt;
+		switch (opt)
+		{
+		case 1:
+		{
+			while (true)
+			{
+				cout << "entere new account number:\t";
+				cin.get(accountNumber, 13);
+				int index = isAccountNumberExist(*bank, accountNumber);
+				if (index == -1)
+				{
+					cout << "plz entere to be special!\n";
+				}
+				else
+					break;
+			}
+			bank->costumers[findedAccountNumber].getAccount(findedAccountNumber).setAccountNumber(accountNumber);
+
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
+
+		}break;
+
+		case 2:
+		{
+			cout << "entere new account balance:\t";
+			double balance;
+			cin >> balance;
+			bank->costumers[findedAccountNumber].getAccount(findedAccountNumber).setDouble(balance);
+
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
+
+		}break;
+		case 3:
+		{
+			cout << "plz entere new IBAN:\t";
+			char IBAN[16];
+			cin.get(IBAN, 16);
+			bank->costumers[findedAccountNumber].getAccount(findedAccountNumber).setIBN(IBAN);
+
+			ofstream file("MyRecords.dat", ios::binary);
+			file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
+			
+		}break;
+
+		}
+	}
+	else
+		cout << "not found!\n";
 }
 
-void changeClerksDuty(Bank bank)
+void changeClerksDuty(Bank* bank)
 {
 	int id;
 	cout << "plz entere clerk id for change:\t";
 	cin >> id;
 	cin.clear();
 	cin.ignore();
-	for (int i = 0; bank.clerkCounter; i++)
+	int index = isClerkIdExist(*bank, id);
+	if (index == -1)
 	{
-		if (bank.clerks[i].getClerkId() == id)
-		{
-			cout << "clerk duty is " << bank.clerks[i].getDuty() << "\nentere new duty:\t";
-			string newDuty;
-			getline(cin, newDuty);
-			bank.clerks[i].setDuty(newDuty);
-			cout << "duty changed\n";
-			break;
-		}
+		cout << "not found!\n";
+		return;
 	}
+
+	cout << "clerk duty is " << bank->clerks[index].getDuty() << "\nentere new duty:\t";
+	string newDuty;
+	getline(cin, newDuty);
+	bank->clerks[index].setDuty(newDuty);
+	cout << "duty changed\n";
+
 	ofstream file("MyRecords.dat", ios::binary);
-	file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+	file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
+
 }
 
 void editClerk(Bank* bank)
@@ -540,7 +632,7 @@ void editClerk(Bank* bank)
 			bank->clerks[index].setWorkPlaceAddress(address);
 			//update binary
 			ofstream file("MyRecords.dat", ios::binary);
-			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+			file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
 
 			cout << "updated successfully!\n";
 
@@ -555,7 +647,7 @@ void editClerk(Bank* bank)
 			bank->clerks[index].setPhoneNumber(number);
 			//update binary
 			ofstream file("MyRecords.dat", ios::binary);
-			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+			file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
 
 			cout << "updated successfully!\n";
 		}break;
@@ -569,7 +661,7 @@ void editClerk(Bank* bank)
 			bank->clerks[index].setHomePhoneNumber(number);
 			//update binary
 			ofstream file("MyRecords.dat", ios::binary);
-			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+			file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
 
 			cout << "updated successfully!\n";
 		}break;
@@ -589,7 +681,7 @@ void editClerk(Bank* bank)
 
 				//update binary
 				ofstream file("MyRecords.dat", ios::binary);
-				file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+				file.write(reinterpret_cast<const char*>(bank), sizeof(Bank));
 			}
 			else
 			{
@@ -605,11 +697,6 @@ void editClerk(Bank* bank)
 			return;
 		}
 	}
-}
-
-void search(Bank)
-{
-
 }
 
 void searchByName(Bank bank)
@@ -641,9 +728,11 @@ void searchByAccount(Bank bank)
 			if (bank.getCostumers(i).getAccount(j).getAccountNUmber() == AcNumber)
 			{
 				bank.costumers[i].showInfo();
+				return;
 			}
 		}
 	}
+	cout << "no account found!\n";
 }
 
 void searchByCostumerId(Bank bank)
@@ -698,7 +787,7 @@ void findAccountsCards(Bank bank)
 	}
 }
 
-void findyCostumerCards(Bank bank)
+void findCostumerCards(Bank bank)
 {
 	cout << "plz entere costumer id:\t";
 	int id;
