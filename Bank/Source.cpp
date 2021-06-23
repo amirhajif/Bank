@@ -13,7 +13,9 @@ Date::Date(int day, int month, int year)
 	this->month = month;
 	this->year = year;
 }
-
+int Date::getDay() { return day; }
+int Date::getMonth() { return month; }
+int Date::getYear() { return year; }
 
 Account::Account(char* accNumber,Date creationDate, double balance,char* ibanCode)
 {
@@ -175,7 +177,7 @@ void Person::showInfo()
 	birthDate.printDate();
 	cout << "\n---------------------------\n";
 }
-
+Date Person::getBirthDate() { return birthDate; }
 
 Costumer::Costumer(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate, Date registerDate, string emailAddress,int costumerId) :Person(name, lastName, nationalCode, workPlaceAddress, phoneNumber, homePhoneNumber, fatherName, birthDate)
 {
@@ -230,6 +232,9 @@ int Costumer::getCardSize()
 {
 	return cardCounter;
 }
+
+Date Costumer::getRegDate() { return registerDate; }
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 Cheque::Cheque(Person payor, Person getter, int id, double amount)
 {
@@ -707,19 +712,67 @@ void findCostumerById(Bank bank)
 	cout << "not found costumer by this id\n";
 }
 
-void findCostumerByBalance(Bank)
+void findCostumerByBalance(Bank bank)
 {
+	double balance;
+	cout << "plz entere balance:\t";
+	cin >> balance;
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		for (int j = 0; j < bank.costumers[i].getAccountSize(); j++)
+		{
+			if (bank.costumers[i].getAccount(j).getBalance() == balance)
+				bank.costumers[i].showInfo();
+		}
+	}
 
 }
 
-void findCostumerBeforeDate(Bank)
+void findCostumerBeforeDate(Bank bank)
 {
+	int day, month, year;
+	cout << "plz entere day,month,year:\t";
+	cin >> day >> month >> year;
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		if (bank.costumers[i].getBirthDate().getYear() < year)
+		{
+			bank.costumers[i].showInfo();
+		}
+		else if (bank.costumers[i].getBirthDate().getYear() == year && bank.costumers[i].getBirthDate().getMonth() < month)
+		{
+			bank.costumers[i].showInfo();
+		}
+		else if (bank.costumers[i].getBirthDate().getYear() == year && bank.costumers[i].getBirthDate().getMonth() == month && bank.costumers[i].getBirthDate().getDay() < day) {
+			bank.costumers[i].showInfo();
+		}
+		else
+			continue;
+	}
 	
 }
 
-void findCostumerBeforeRegDate(Bank)
+void findCostumerBeforeRegDate(Bank bank)
 {
-
+	int day, month, year;
+	cout << "plz entere day,month,year:\t";
+	cin >> day >> month >> year;
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		if (bank.costumers[i].getRegDate().getYear() < year)
+		{
+			bank.costumers[i].showInfo();
+		}
+		else if (bank.costumers[i].getRegDate().getYear() == year && bank.costumers[i].getRegDate().getMonth() < month)
+		{
+			bank.costumers[i].showInfo();
+		}
+		else if (bank.costumers[i].getRegDate().getYear() == year && bank.costumers[i].getRegDate().getMonth() == month && bank.costumers[i].getRegDate().getDay() < day) {
+			bank.costumers[i].showInfo();
+		}
+		else
+			continue;
+	}
 }
 
 void requestLoan(Bank)
