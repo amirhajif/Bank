@@ -485,9 +485,27 @@ void editAccount(Bank)
 
 }
 
-void changeClerksDuty(Bank)
+void changeClerksDuty(Bank bank)
 {
-
+	int id;
+	cout << "plz entere clerk id for change:\t";
+	cin >> id;
+	cin.clear();
+	cin.ignore();
+	for (int i = 0; bank.clerkCounter; i++)
+	{
+		if (bank.clerks[i].getClerkId() == id)
+		{
+			cout << "clerk duty is " << bank.clerks[i].getDuty() << "\nentere new duty:\t";
+			string newDuty;
+			getline(cin, newDuty);
+			bank.clerks[i].setDuty(newDuty);
+			cout << "duty changed\n";
+			break;
+		}
+	}
+	ofstream file("MyRecords.dat", ios::binary);
+	file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 }
 
 void editClerk(Bank* bank)
@@ -610,9 +628,22 @@ void searchByName(Bank bank)
 	bank.costumers[index].showInfo();
 }
 
-void searchByAccount(Bank)
+void searchByAccount(Bank bank) 
 {
-
+	cout << "plz entere Account number:\t";
+	int Number;
+	cin >> Number;
+	string AcNumber = to_string(Number);
+	for (int i = 0; i < bank.getCostumerCounter(); i++)
+	{
+		for (int j = 0; j < bank.getCostumers(i).getAccountSize(); j++)
+		{
+			if (bank.getCostumers(i).getAccount(j).getAccountNUmber() == AcNumber)
+			{
+				bank.costumers[i].showInfo();
+			}
+		}
+	}
 }
 
 void searchByCostumerId(Bank bank)
