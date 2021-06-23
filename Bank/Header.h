@@ -125,36 +125,88 @@ public:
 	void addCostumer(Costumer);
 	void addClerk(Clerk);
 
+	//shomare hesab mojode ya n
 	friend int isAccountNumberExist(Bank, char*);
+	
+	//costuemr ba in id vojod dare?
 	friend int isCostumerIdExist(Bank, int);
+	
+	//in shomare cart vojod dare?
 	friend int isCardNumberExist(Bank, char*);
+	
+
 	friend void editCostumer(Bank*);
+	
+	//shomare shaba mide
 	friend void getIbanCode(Bank);
+	
 	friend void editAccount(Bank);
+	
 	friend void changeClerksDuty(Bank);
+	
 	friend void editClerk(Bank*);
+	
 	friend void search(Bank);
+	
 	friend void searchByName(Bank);
+	
 	friend void searchByAccount(Bank);
+	
 	friend void searchByCostumerId(Bank);
+	
 	friend void searchByCostumerAccounts(Bank);
+	
 	friend void findAccountsCards(Bank);
+	
 	friend void findyCostumerCards(Bank);
+	
 	friend void showCostumersInfo(Bank);
+	
+	//peydakardane costuemr bar asase id
 	friend void findCostumerById(Bank);
+	
+	//peyda kardane moshtari bar asase mojodi
 	friend void findCostumerByBalance(Bank);
+
+	//peyda kardane moshtari ghabl az ye tarikh khas
 	friend void findCostumerBeforeDate(Bank);
+	
+	//peyda kardane moshtari ghabl az ye tarikh sabte name
 	friend void findCostumerBeforeRegDate(Bank);
+	
 	friend void requestLoan(Bank);
+
+	//costumer ba in code melli hast ya n
 	friend int isCostumerExist(Bank, char*);
+	
+	//clerk ba in code melli hast ya n
 	friend int isClerkExist(Bank, char*);
+	
+	//clerk ba in id vojod dare?
 	friend int isClerkIdExist(Bank, int);
+	
+	//raees darim ya n
 	friend int doesBossExist(Bank, string);
+	
+	//hesab be moshtari ezaf mikne
 	friend void addAccountToCostumer(Bank&);
+	
+	//cart be hesab ezafe mkne
 	friend void addCardToCostumerAccount(Bank&);
+	
+	//shomare shba mojode ya n
 	friend int isIbanCodeExist(Bank, char*);
+	
+	//esm in costumer hast ya n
 	friend int isCostumerNameExist(Bank, string);
+	
+	//peyda kardane costumer bar asase shomare hesab
 	friend int findCostumerByAccountNumber(Bank, char*);
+
+
+	Costumer getCostumers(int);
+	int getCostumerCounter();
+
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 class Cheque {
@@ -174,4 +226,5 @@ char* createAccountNumber();
 char* createCardNumber();
 void addClerk(Bank&);
 int createClerkId();
+void makeOrExistFile(Bank&);
 

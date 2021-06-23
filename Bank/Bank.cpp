@@ -4,7 +4,6 @@
 #include <time.h>
 #include <assert.h>
 #include "Header.h"
-#include "Source.cpp"
 
 #define binaryFileName "MyRecords.dat"
 using namespace std;
