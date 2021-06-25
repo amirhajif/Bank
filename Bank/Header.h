@@ -76,6 +76,7 @@ public:
 	string getName();
 	void showInfo();
 	Date getBirthDate();
+	void createReport(string);
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 class Costumer :public Person {
@@ -165,6 +166,8 @@ public:
 	friend void findAccountsCards(Bank);
 	
 	friend void findCostumerCards(Bank);
+
+	friend void findCostumerAccount(Bank);
 	
 	friend void showCostumersInfo(Bank);
 	
@@ -174,13 +177,15 @@ public:
 	//peyda kardane moshtari bar asase mojodi
 	friend void findCostumerByBalance(Bank);
 
+	friend void findCostumerByDate(Bank);
+
 	//peyda kardane moshtari ghabl az ye tarikh khas
 	friend void findCostumerBeforeDate(Bank);
 	
 	//peyda kardane moshtari ghabl az ye tarikh sabte name
 	friend void findCostumerBeforeRegDate(Bank);
 	
-	friend void requestLoan(Bank);
+	friend void requestLoan(Bank*);
 
 	//costumer ba in code melli hast ya n
 	friend int isCostumerExist(Bank, char*);
@@ -209,9 +214,16 @@ public:
 	//peyda kardane costumer bar asase shomare hesab
 	friend int findCostumerByAccountNumber(Bank, char*);
 
+	friend int findCostumerByCardNumber(Bank, char*);
+
+	friend void findCostumerByAcNumber(Bank);
+
+	friend void findCsotumerBycardnumber(Bank);
 
 	Costumer getCostumers(int);
 	int getCostumerCounter();
+	double getAmount();
+	void setAmount(double);
 
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,4 +245,3 @@ char* createCardNumber();
 void addClerk(Bank&);
 int createClerkId();
 void makeOrExistFile(Bank&);
-

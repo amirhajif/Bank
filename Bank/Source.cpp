@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include "Header.h"
+#define reportFileName "MyReports.txt"
 
 using namespace std;
 void Date::printDate() { cout << this->year << "/" << this->month << "/" << this->day << endl; }
@@ -189,6 +190,22 @@ void Person::showInfo()
 }
 Date Person::getBirthDate() { return birthDate; }
 
+void Person::createReport(string fileAddress)
+{
+	ofstream fileReport(fileAddress, ios::app);
+	fileReport << "\n---------------------------\n";
+	fileReport << "name:\t" << name << endl;
+	fileReport << "last name:\t" << lastName << endl;
+	fileReport << "national code:\t" << nationalCode << endl;
+	fileReport << "father name:\t" << fatherName << endl;
+	fileReport << "work place address:\t" << workPlaceAddress << endl;
+	fileReport << "phone number:\t" << phoneNumber << endl;
+	fileReport << "home phone number:\t" << homePhoneNumber << endl;
+	fileReport << "birthdate:\t";
+	fileReport << birthDate.getDay() << "/" << birthDate.getMonth() << "/" << birthDate.getYear() << endl;
+	fileReport << "\n---------------------------\n";
+}
+
 Costumer::Costumer(string name, string lastName, string nationalCode, string workPlaceAddress, string phoneNumber, string homePhoneNumber, string fatherName, Date birthDate, Date registerDate, string emailAddress,int costumerId) :Person(name, lastName, nationalCode, workPlaceAddress, phoneNumber, homePhoneNumber, fatherName, birthDate)
 {
 	this->customerId = costumerId;
@@ -304,6 +321,16 @@ Bank::Bank()
 	clerkCounter=0;
 	costomersCounter=0;
 }
+double Bank::getAmount()
+{
+	return balance;
+}
+
+void Bank::setAmount(double amount)
+{
+	balance = amount;
+}
+
 
 int isAccountNumberExist(Bank bank, char* code)
 {
@@ -771,20 +798,40 @@ void searchByCostumerAccounts(Bank bank)
 void findAccountsCards(Bank bank)
 {
 	cout << "plz entere Account number:\t";
-	int Number;
-	cin >> Number;
-	string AcNumber = to_string(Number);
-	for (int i = 0; i < bank.getCostumerCounter(); i++)
+	char acNumber[13];
+	cin.get(acNumber, 13);
+
+	int indexOfAccount = isAccountNumberExist(bank, acNumber);
+	if (indexOfAccount == -1)
 	{
-		for (int j = 0; j < bank.getCostumers(i).getAccountSize(); j++)
-		{
-			if (bank.getCostumers(i).getAccount(j).getAccountNUmber() == AcNumber)
-			{
-				for (int k = 0; k < bank.getCostumers(i).getCardSize(); k++)
-					cout << bank.getCostumers(i).getCard(k).getCardNumber()<<endl;
-			}
-		}
+		cout << "not found!\n";
+		return;
 	}
+	int indexOfCostumer = findCostumerByAccountNumber(bank, acNumber);
+	cout << "cards link to this account:\n";
+	bool notFound = true;
+	for (int i = 0; i < bank.costumers[indexOfCostumer].getCardSize(); i++)
+	{
+		int counter = 0;
+		for (int j = 0; j < 12; j++)
+			if (bank.costumers[indexOfCostumer].getCard(i).getAccount().getAccountNUmber()[j] == acNumber[j])
+				counter++;
+
+		if (counter == 12)
+		{
+			notFound = false;
+			for (int j = 0; j < 16; j++)
+				cout << bank.costumers[indexOfCostumer].getCard(i).getCardNumber()[j];
+			cout << endl;
+
+		}
+
+	}
+
+	if (notFound)
+		cout << "no card found!\n";
+
+
 }
 
 void findCostumerCards(Bank bank)
@@ -798,8 +845,13 @@ void findCostumerCards(Bank bank)
 		{
 			cout << "this costumer cards:\n";
 			for (int j = 0; j < bank.costumers[i].getCardSize(); j++)
-				cout << bank.costumers[i].getCard(j).getCardNumber()<<endl;
-			return;
+			{
+				for (int k = 0; k < 16; k++)
+					cout << bank.costumers[i].getCard(j).getCardNumber()[k];
+
+				cout << endl;
+			}
+				return;
 		}
 
 	}
@@ -837,14 +889,26 @@ void findCostumerByBalance(Bank bank)
 	double balance;
 	cout << "plz entere balance:\t";
 	cin >> balance;
+
+	bool notFound = true;
 	for (int i = 0; i < bank.costomersCounter; i++)
 	{
 		for (int j = 0; j < bank.costumers[i].getAccountSize(); j++)
 		{
-			if (bank.costumers[i].getAccount(j).getBalance() == balance)
+			if (bank.costumers[i].getAccount(j).getBalance() >= balance)
+			{
+				notFound = false;
+				ofstream fileReport(reportFileName, ios::app);
+				fileReport << "costumer with balance higher than " << balance << " :\n";
+				fileReport.close();
 				bank.costumers[i].showInfo();
+				bank.costumers[i].createReport(reportFileName);
+			}
 		}
 	}
+
+	if (notFound)
+		cout << "no match found!\n";
 
 }
 
@@ -853,18 +917,33 @@ void findCostumerBeforeDate(Bank bank)
 	int day, month, year;
 	cout << "plz entere day,month,year:\t";
 	cin >> day >> month >> year;
+	ofstream reportFile;
 	for (int i = 0; i < bank.costomersCounter; i++)
 	{
 		if (bank.costumers[i].getBirthDate().getYear() < year)
 		{
+			reportFile.open(reportFileName, ios::app);
+			reportFile << "costumers before date " << day << "/" << month << "/" << year << ":\n";
+			reportFile.close();
 			bank.costumers[i].showInfo();
+			bank.costumers[i].createReport(reportFileName);
 		}
 		else if (bank.costumers[i].getBirthDate().getYear() == year && bank.costumers[i].getBirthDate().getMonth() < month)
 		{
+			reportFile.open(reportFileName, ios::app);
+			reportFile << "costumers before date " << day << "/" << month << "/" << year << ":\n";
+			reportFile.close();
 			bank.costumers[i].showInfo();
+			bank.costumers[i].createReport(reportFileName);
+
 		}
 		else if (bank.costumers[i].getBirthDate().getYear() == year && bank.costumers[i].getBirthDate().getMonth() == month && bank.costumers[i].getBirthDate().getDay() < day) {
+			reportFile.open(reportFileName, ios::app);
+			reportFile << "costumers before date " << day << "/" << month << "/" << year << ":\n";
+			reportFile.close();
 			bank.costumers[i].showInfo();
+			bank.costumers[i].createReport(reportFileName);
+
 		}
 		else
 			continue;
@@ -877,26 +956,70 @@ void findCostumerBeforeRegDate(Bank bank)
 	int day, month, year;
 	cout << "plz entere day,month,year:\t";
 	cin >> day >> month >> year;
+	ofstream reportFile;
 	for (int i = 0; i < bank.costomersCounter; i++)
 	{
 		if (bank.costumers[i].getRegDate().getYear() < year)
 		{
+			reportFile.open(reportFileName, ios::app);
+			reportFile << "costumers before reg date:\n";
+			reportFile.close();
 			bank.costumers[i].showInfo();
+			bank.costumers[i].createReport(reportFileName);
 		}
 		else if (bank.costumers[i].getRegDate().getYear() == year && bank.costumers[i].getRegDate().getMonth() < month)
 		{
+			reportFile.open(reportFileName, ios::app);
+			reportFile << "costumers before reg date:\n";
+			reportFile.close();
 			bank.costumers[i].showInfo();
+			bank.costumers[i].createReport(reportFileName);
 		}
 		else if (bank.costumers[i].getRegDate().getYear() == year && bank.costumers[i].getRegDate().getMonth() == month && bank.costumers[i].getRegDate().getDay() < day) {
+			reportFile.open(reportFileName, ios::app);
+			reportFile << "costumers before reg date:\n";
+			reportFile.close();
 			bank.costumers[i].showInfo();
+			bank.costumers[i].createReport(reportFileName);
 		}
 		else
 			continue;
 	}
 }
 
-void requestLoan(Bank)
+void requestLoan(Bank* bank)
 {
+	cout << "enter account number:\t";
+	char acNumber[13];
+	cin.get(acNumber, 13);
+
+	int index = findCostumerByAccountNumber(*bank, acNumber);
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+	int indexOfAccount = isAccountNumberExist(*bank, acNumber);
+
+	cout << "the infos of the requester:\n";
+	bank->costumers[index].showInfo();
+
+	cout << "enter the amount of loan:\t";
+	int requestedAmount;
+	cin >> requestedAmount;
+	if (requestedAmount < bank->getAmount())
+	{
+		double prevAmount = bank->costumers[index].getAccount(indexOfAccount).getBalance();
+		bank->costumers[index].getAccount(indexOfAccount).setDouble(prevAmount + requestedAmount);
+		double bankPrevAmount = bank->getAmount();
+		bank->setAmount(bankPrevAmount - requestedAmount);
+
+		ofstream file("MyRecords.dat", ios::binary);
+		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+		file.close();
+	}
+	else
+		cout << "bank dont have this amount!\n";
 
 }
 
@@ -1299,6 +1422,7 @@ void addAccountToCostumer(Bank& bank)
 				break;
 		}
 
+
 		bank.costumers[index].addAccount(Account(newAccountNumber, Date(day, month, year), balance, ibanCode));
 
 		//update binary
@@ -1375,8 +1499,10 @@ void addCardToCostumerAccount(Bank& bank)
 			cout << "card added successfully!\n";
 
 			//update binary
+			Bank *newbank = new Bank;
+			newbank = &bank;
 			ofstream file("MyRecords.dat", ios::binary);
-			file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
+			file.write(reinterpret_cast<const char*>(newbank), sizeof(Bank));
 		}
 
 	}
@@ -1411,6 +1537,7 @@ int findCostumerByAccountNumber(Bank bank, char* accNumber)
 	return -1;
 	
 }
+
 void makeOrExistFile(Bank &bank) {
 	ifstream check("MyRecords.dat",ios::binary);
 	if (check)
@@ -1426,4 +1553,102 @@ void makeOrExistFile(Bank &bank) {
 		file.write(reinterpret_cast<const char*>(&bank), sizeof(Bank));
 		return;
 	}
+}
+
+void findCostumerAccount(Bank bank)
+{
+	cout << "enter costumer id:\t";
+	int costumerId;
+	cin >> costumerId;
+
+	int index = isCostumerIdExist(bank, costumerId);
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+
+	cout << "accounts:\n";
+	for (int i = 0; i < bank.costumers[index].getAccountSize(); i++)
+	{
+		for (int j = 0; j < 12; j++)
+			cout << bank.costumers[index].getAccount(i).getAccountNUmber()[j];
+		cout << endl;
+	}
+}
+
+void findCostumerByAcNumber(Bank bank)
+{
+	cout << "enter ac number:\t";
+	char acNumber[13];
+	cin.get(acNumber, 13);
+
+	int index = findCostumerByAccountNumber(bank, acNumber);
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+
+	bank.costumers[index].showInfo();
+}
+
+int findCostumerByCardNumber(Bank bank, char* cardNumber)
+{
+	
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		for (int j = 0; j < bank.costumers[i].getCardSize(); j++)
+		{
+			int counter = 0;
+			for (int k = 0; k < 16; k++)
+			{
+				if (bank.costumers[i].getCard(j).getCardNumber()[k] == cardNumber[k])
+					counter++;
+			}
+
+			if (counter == 16)
+				return i;
+		}
+	}
+
+	return -1;
+
+}
+
+void findCsotumerBycardnumber(Bank bank)
+{
+	cout << "enter card number:\t";
+	char cardNumber[17];
+	cin.get(cardNumber, 17);
+
+	int index = findCostumerByCardNumber(bank, cardNumber);
+	if (index == -1)
+	{
+		cout << "not found!\n";
+		return;
+	}
+
+	bank.costumers[index].showInfo();
+}
+
+void findCostumerByDate(Bank bank)
+{
+	cout << "etner today date:(day month year -seperate with space-):\t";
+	int day, month, year;
+	cin >> day >> month >> year;
+
+	bool notFound = true;
+	cout << "accounts registred in this date:\n";
+	for (int i = 0; i < bank.costomersCounter; i++)
+	{
+		Date date = bank.costumers[i].getBirthDate();
+		if (date.getDay() == day && date.getMonth() == month && date.getYear() == year)
+		{
+			notFound = false;
+			bank.costumers[i].showInfo();
+		}
+	}
+	if (notFound)
+		cout << "no match found!\n";
 }
